@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}Drivers - Car Transport Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-users"></i> Drivers Management</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('add_driver') }}" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add New Driver
+        </a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="card-title mb-0">Active Drivers</h5>
+    </div>
+    <div class="card-body">
+        {% if drivers %}
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>License Number</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        <th>Hire Date</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for driver in drivers %}
+                    <tr>
+                        <td>{{ driver[0] }}</td>
+                        <td><strong>{{ driver[1] }}</strong></td>
+                        <td><span class="badge bg-info">{{ driver[2] }}</span></td>
+                        <td>{{ driver[3] or '-' }}</td>
+                        <td>{{ driver[4] or '-' }}</td>
+                        <td>{{ driver[5] or '-' }}</td>
+                        <td>
+                            <span class="badge bg-success">{{ driver[6].title() }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-users fa-3x text-muted mb-3"></i>
+            <h5 class="text-muted">No drivers found</h5>
+            <p class="text-muted">Start by adding your first driver to the system.</p>
+            <a href="{{ url_for('add_driver') }}" class="btn btn-primary">
+                <i class="fas fa-plus"></i> Add First Driver
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
