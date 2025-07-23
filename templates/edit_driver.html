@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Driver - Car Transport Management{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+    <h1 class="h2"><i class="fas fa-user-edit"></i> Edit Driver</h1>
+    <div class="btn-toolbar mb-2 mb-md-0">
+        <a href="{{ url_for('drivers') }}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left"></i> Back to Drivers
+        </a>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="card-title mb-0">Driver Information</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="name" class="form-label">Full Name *</label>
+                            <input type="text" class="form-control" id="name" name="name" value="{{ driver[1] }}" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="license_number" class="form-label">License Number *</label>
+                            <input type="text" class="form-control" id="license_number" name="license_number" value="{{ driver[2] }}" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="phone" class="form-label">Phone Number</label>
+                            <input type="tel" class="form-control" id="phone" name="phone" value="{{ driver[3] or '' }}">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="email" class="form-label">Email Address</label>
+                            <input type="email" class="form-control" id="email" name="email" value="{{ driver[4] or '' }}">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="hire_date" class="form-label">Hire Date</label>
+                            <input type="date" class="form-control" id="hire_date" name="hire_date" value="{{ driver[5] or '' }}">
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <a href="{{ url_for('drivers') }}" class="btn btn-secondary me-md-2">Cancel</a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Driver
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h6 class="card-title mb-0"><i class="fas fa-info-circle"></i> Information</h6>
+            </div>
+            <div class="card-body">
+                <p class="text-muted small">
+                    <strong>Note:</strong> Fields marked with * are required. Make sure the license number is unique.
+                </p>
+                <hr>
+                <p class="text-muted small">
+                    <strong>Driver ID:</strong> {{ driver[0] }}<br>
+                    <strong>Current Status:</strong> <span class="badge bg-success">{{ driver[6].title() }}</span>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

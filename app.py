@@ -221,6 +221,65 @@ def add_driver():
     return render_template('add_driver.html')
 
 
+@app.route('/edit_driver/<int:driver_id>', methods=['GET', 'POST'])
+def edit_driver(driver_id):
+    conn = sqlite3.connect('car_transport.db')
+    c = conn.cursor()
+    
+    if request.method == 'POST':
+        name = request.form['name']
+        license_number = request.form['license_number']
+        phone = request.form['phone']
+        email = request.form['email']
+        hire_date = request.form['hire_date']
+        
+        try:
+            c.execute("""UPDATE drivers 
+                        SET name=?, license_number=?, phone=?, email=?, hire_date=? 
+                        WHERE id=?""",
+                     (name, license_number, phone, email, hire_date, driver_id))
+            conn.commit()
+            flash('Driver updated successfully!', 'success')
+        except sqlite3.IntegrityError:
+            flash('License number already exists!', 'error')
+        conn.close()
+        return redirect(url_for('drivers'))
+    
+    # GET request - show edit form
+    c.execute("SELECT * FROM drivers WHERE id=?", (driver_id,))
+    driver = c.fetchone()
+    conn.close()
+    
+    if not driver:
+        flash('Driver not found!', 'error')
+        return redirect(url_for('drivers'))
+    
+    return render_template('edit_driver.html', driver=driver)
+
+
+@app.route('/delete_driver/<int:driver_id>', methods=['POST'])
+def delete_driver(driver_id):
+    conn = sqlite3.connect('car_transport.db')
+    c = conn.cursor()
+    
+    # Check if driver has any attendance records
+    c.execute("SELECT COUNT(*) FROM attendance WHERE driver_id=?", (driver_id,))
+    attendance_count = c.fetchone()[0]
+    
+    if attendance_count > 0:
+        # Don't actually delete, just mark as inactive
+        c.execute("UPDATE drivers SET status='inactive' WHERE id=?", (driver_id,))
+        flash('Driver marked as inactive (has attendance records)', 'warning')
+    else:
+        # Safe to delete completely
+        c.execute("DELETE FROM drivers WHERE id=?", (driver_id,))
+        flash('Driver deleted successfully!', 'success')
+    
+    conn.commit()
+    conn.close()
+    return redirect(url_for('drivers'))
+
+
 @app.route('/attendance')
 def attendance():
     conn = sqlite3.connect('car_transport.db')
